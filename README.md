@@ -1,2 +1,2 @@
 # pipex
-School project for handling pipes and executing commands
+A project about handling pipes and executing commands
