@@ -6,7 +6,7 @@
 /*   By: saylital <saylital@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 13:38:40 by saylital          #+#    #+#             */
-/*   Updated: 2024/08/07 13:59:05 by saylital         ###   ########.fr       */
+/*   Updated: 2024/08/07 14:29:19 by saylital         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ int	skip_quotes(char *str, char quote, int i)
 static	int	count_quotes(char *str)
 {
 	int	count;
+	int	start;
 	int	i;
-	int	j;
 
 	count = 0;
 	i = 0;
@@ -37,9 +37,9 @@ static	int	count_quotes(char *str)
 	{
 		while (str[i] && (str[i] == '"' || str[i] == '\''))
 		{
-			j = i;
+			start = i;
 			i = skip_quotes(str, str[i], i);
-			count = count + (i - j - 2);
+			count = count + (i - start - 2);
 		}
 		if (str[i] && str[i] != ' ' && str[i] != '"' && str[i] != '\'')
 			count++;
@@ -61,7 +61,7 @@ static	char	*handle_quotes(char *str, int i)
 	k = 0;
 	while (str[i])
 	{
-		if (str[i] && (str[i] == '"' || str[i] == '\''))
+		while (str[i] && (str[i] == '"' || str[i] == '\''))
 		{
 			j = i + 1;
 			i = skip_quotes(str, str[i], i);

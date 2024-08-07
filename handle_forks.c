@@ -6,7 +6,7 @@
 /*   By: saylital <saylital@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 11:43:45 by saylital          #+#    #+#             */
-/*   Updated: 2024/08/07 13:59:35 by saylital         ###   ########.fr       */
+/*   Updated: 2024/08/07 15:11:39 by saylital         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,11 @@ void	execute_first(char *argv[], char *firstpath, char *envp[])
 	char	**cmd_parse;
 
 	cmd_parse = ft_split_args(argv[2]);
+	{
+		free(firstpath);
+		ft_putendl_fd("pipex: Error: Malloc fail", 2);
+		exit(EXIT_FAILURE);
+	}
 	if (execve(firstpath, cmd_parse, envp) == -1)
 	{
 		perror("pipex: ");
@@ -31,6 +36,12 @@ void	execute_second(char *argv[], char *secondpath, char *envp[])
 	char	**cmd_parse1;
 
 	cmd_parse1 = ft_split_args(argv[3]);
+	if (!cmd_parse1)
+	{
+		free(secondpath);
+		ft_putendl_fd("pipex: Error: Malloc fail", 2);
+		exit(EXIT_FAILURE);
+	}
 	if (execve(secondpath, cmd_parse1, envp) == -1)
 	{
 		perror("pipex: ");
