@@ -6,7 +6,7 @@
 /*   By: saylital <saylital@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 10:08:49 by saylital          #+#    #+#             */
-/*   Updated: 2024/08/07 10:25:30 by saylital         ###   ########.fr       */
+/*   Updated: 2024/08/07 13:43:55 by saylital         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,4 +33,7 @@ void	execute_second(char *argv[], char *secondpath, char *envp[]);
 int		is_command(char *str);
 char	*parse_quotes(char *str);
 char	**ft_split_args(char *s);
+int		skip_quotes(char *str, char quote, int i);
+char	**remove_quotes(char **arr);
+
 #endif

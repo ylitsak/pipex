@@ -6,7 +6,7 @@
 /*   By: saylital <saylital@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 11:43:45 by saylital          #+#    #+#             */
-/*   Updated: 2024/08/07 11:27:22 by saylital         ###   ########.fr       */
+/*   Updated: 2024/08/07 13:59:35 by saylital         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,8 @@
 void	execute_first(char *argv[], char *firstpath, char *envp[])
 {
 	char	**cmd_parse;
-	//char	*parse;
-	//int i = 0;
 
-	//parse = parse_quotes(argv[2]);
 	cmd_parse = ft_split_args(argv[2]);
-	//free(parse);
-	// while(cmd_parse[i] != NULL)
-	// {
-	// 	cmd_parse[i] = parse_quotes(cmd_parse[i]);
-	// 	i++;
-	// }
 	if (execve(firstpath, cmd_parse, envp) == -1)
 	{
 		perror("pipex: ");
@@ -38,18 +29,8 @@ void	execute_first(char *argv[], char *firstpath, char *envp[])
 void	execute_second(char *argv[], char *secondpath, char *envp[])
 {
 	char	**cmd_parse1;
-	//char	*parse;
-	int i = 0;
-	//parse = parse_quotes(argv[3]);
-	//ft_putendl_fd(parse, 2);
-	cmd_parse1 = ft_split_args(argv[3]);
-	//free(parse);
-	while(cmd_parse1[i] != NULL)
-	{
 
-		cmd_parse1[i] = parse_quotes(cmd_parse1[i]);
-		i++;
-	}
+	cmd_parse1 = ft_split_args(argv[3]);
 	if (execve(secondpath, cmd_parse1, envp) == -1)
 	{
 		perror("pipex: ");

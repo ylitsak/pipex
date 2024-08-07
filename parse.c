@@ -6,22 +6,25 @@
 /*   By: saylital <saylital@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 09:14:48 by saylital          #+#    #+#             */
-/*   Updated: 2024/08/07 11:27:17 by saylital         ###   ########.fr       */
+/*   Updated: 2024/08/07 14:00:21 by saylital         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int skip_quotes(char *str, char quote, int i)
+static int	skip_word(char *string, int i)
 {
-	if (str[i + 1])
-		i++;
-	while (str[i] && str[i] != quote)
-		i++;
-	if (str[i] == quote)
-		i++;
-	else
-		return (-1);
+	while (string[i] && string[i] != ' ')
+	{
+		if (string[i] && (string[i] == '"' || string[i] == '\''))
+		{
+			i = skip_quotes(string, string[i], i);
+			if (i == -1)
+				return (-1);
+		}
+		else
+			i++;
+	}
 	return (i);
 }
 
@@ -38,7 +41,6 @@ static void	free_arrays(char **words, size_t n)
 static int	word_counter(char *string)
 {
 	size_t	count_words;
-	char	quote;
 	int		i;
 
 	count_words = 0;
@@ -49,28 +51,19 @@ static int	word_counter(char *string)
 			i++;
 		if (string[i])
 			count_words++;
-		while (string[i] && string[i] != ' ')
-		{
-			if (string[i] && (string[i] == '"' || string[i] == '\''))
-			{
-				quote = string[i];
-				i = skip_quotes(string, quote, i);
-			}
-			else
-				i++;
-		}
+		i = skip_word(string, i);
+		if (i == -1)
+			return (-1);
 	}
 	return (count_words);
 }
-static char	**word_splitter(char *s, char **ptrarray)
+
+static char	**word_splitter(char *s, char **ptrarray, int i)
 {
-	size_t		i;
 	size_t		j;
 	size_t		start;
 	size_t		len;
-	char		quote;
 
-	i = 0;
 	j = 0;
 	while (s[j])
 	{
@@ -79,16 +72,7 @@ static char	**word_splitter(char *s, char **ptrarray)
 		if (s[j] == '\0')
 			break ;
 		start = j;
-		while (s[j] && s[j] != ' ')
-		{
-			if (s[j] && (s[j] == '"' || s[j] == '\''))
-			{
-				quote = s[j];
-				j = skip_quotes(s, quote, j);
-			}
-			else
-				j++;
-		}
+		j = skip_word(s, j);
 		len = j - start;
 		ptrarray[i] = ft_substr(s, start, len);
 		if (ptrarray[i] == NULL)
@@ -102,16 +86,6 @@ static char	**word_splitter(char *s, char **ptrarray)
 	return (ptrarray);
 }
 
-// static void print_array(char **arr)
-// {
-// 	int i = 0;
-// 	while (arr[i])
-// 	{
-// 		ft_putendl_fd(arr[i], 2);
-// 		i++;
-// 	}
-// }
-
 char	**ft_split_args(char *s)
 {
 	int			total_words;
@@ -120,10 +94,12 @@ char	**ft_split_args(char *s)
 	if (!s)
 		return (NULL);
 	total_words = word_counter(s);
-	word_array = malloc((total_words + 1) * sizeof(char *));
-	if (word_array == NULL)
+	if (total_words == -1)
 		return (NULL);
-	word_array = word_splitter(s, word_array);
-	// print_array(word_array);
+	word_array = malloc((total_words + 1) * sizeof(char *));
+	if (!word_array)
+		return (NULL);
+	word_array = word_splitter(s, word_array, 0);
+	word_array = remove_quotes(word_array);
 	return (word_array);
 }
