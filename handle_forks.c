@@ -6,7 +6,7 @@
 /*   By: saylital <saylital@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 11:43:45 by saylital          #+#    #+#             */
-/*   Updated: 2024/08/07 15:11:39 by saylital         ###   ########.fr       */
+/*   Updated: 2024/08/08 14:55:56 by saylital         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,14 @@
 void	execute_first(char *argv[], char *firstpath, char *envp[])
 {
 	char	**cmd_parse;
+	int		i;
 
-	cmd_parse = ft_split_args(argv[2]);
+	i = 0;
+	cmd_parse = ft_split_args(argv[2], ' ');
+	while (cmd_parse[i] != NULL)
 	{
-		free(firstpath);
-		ft_putendl_fd("pipex: Error: Malloc fail", 2);
-		exit(EXIT_FAILURE);
+		cmd_parse[i] = parse_quotes(cmd_parse[i]);
+		i++;
 	}
 	if (execve(firstpath, cmd_parse, envp) == -1)
 	{
@@ -34,13 +36,14 @@ void	execute_first(char *argv[], char *firstpath, char *envp[])
 void	execute_second(char *argv[], char *secondpath, char *envp[])
 {
 	char	**cmd_parse1;
+	int		i;
 
-	cmd_parse1 = ft_split_args(argv[3]);
-	if (!cmd_parse1)
+	i = 0;
+	cmd_parse1 = ft_split_args(argv[3], ' ');
+	while (cmd_parse1[i] != NULL)
 	{
-		free(secondpath);
-		ft_putendl_fd("pipex: Error: Malloc fail", 2);
-		exit(EXIT_FAILURE);
+		cmd_parse1[i] = parse_quotes(cmd_parse1[i]);
+		i++;
 	}
 	if (execve(secondpath, cmd_parse1, envp) == -1)
 	{

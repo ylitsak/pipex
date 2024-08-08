@@ -5,27 +5,35 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: saylital <saylital@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/01 09:14:48 by saylital          #+#    #+#             */
-/*   Updated: 2024/08/07 14:00:21 by saylital         ###   ########.fr       */
+/*   Created: 2024/08/05 12:08:03 by saylital          #+#    #+#             */
+/*   Updated: 2024/08/08 14:29:28 by saylital         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static int	skip_word(char *string, int i)
+static int	count_words(char *s, char c)
 {
-	while (string[i] && string[i] != ' ')
+	int	count;
+	int	in_quotes;
+
+	count = 0;
+	in_quotes = 0;
+	while (*s)
 	{
-		if (string[i] && (string[i] == '"' || string[i] == '\''))
+		while (*s == c && !in_quotes && *s != '\0')
+			s++;
+		if (*s == '\0')
+			break ;
+		count++;
+		while (*s && (in_quotes || *s != c))
 		{
-			i = skip_quotes(string, string[i], i);
-			if (i == -1)
-				return (-1);
+			if (*s == '\'')
+				in_quotes = !in_quotes;
+			s++;
 		}
-		else
-			i++;
 	}
-	return (i);
+	return (count);
 }
 
 static void	free_arrays(char **words, size_t n)
@@ -38,68 +46,65 @@ static void	free_arrays(char **words, size_t n)
 	free(words);
 }
 
-static int	word_counter(char *string)
+static	char	*process_word(char *s, char **dest, char c)
 {
-	size_t	count_words;
-	int		i;
+	char	*start;
+	int		in_quotes;
 
-	count_words = 0;
-	i = 0;
-	while (string[i])
+	start = s;
+	in_quotes = 0;
+	while (*s && (in_quotes || *s != c))
 	{
-		while (string[i] && string[i] == ' ')
-			i++;
-		if (string[i])
-			count_words++;
-		i = skip_word(string, i);
-		if (i == -1)
-			return (-1);
+		if (*s == '\'')
+		{
+			in_quotes = !in_quotes;
+			s++;
+			continue ;
+		}
+		s++;
 	}
-	return (count_words);
+	*dest = ft_substr(start, 0, s - start);
+	return (s);
 }
 
-static char	**word_splitter(char *s, char **ptrarray, int i)
+static	char	**split_words(char *s, char **arr, char c)
 {
-	size_t		j;
-	size_t		start;
-	size_t		len;
+	int	i;
 
-	j = 0;
-	while (s[j])
+	i = 0;
+	while (*s)
 	{
-		while (s[j] && s[j] == ' ')
-			j++;
-		if (s[j] == '\0')
+		while (*s == c && *s != '\0')
+			s++;
+		if (!*s)
 			break ;
-		start = j;
-		j = skip_word(s, j);
-		len = j - start;
-		ptrarray[i] = ft_substr(s, start, len);
-		if (ptrarray[i] == NULL)
+		s = process_word(s, &arr[i++], c);
+		if (arr[i - 1] == NULL)
 		{
-			free_arrays(ptrarray, i);
+			free_arrays(arr, i - 1);
 			return (NULL);
 		}
-		i++;
 	}
-	ptrarray[i] = NULL;
-	return (ptrarray);
+	arr[i] = NULL;
+	return (arr);
 }
 
-char	**ft_split_args(char *s)
+char	**ft_split_args(char *s, char c)
 {
-	int			total_words;
-	char		**word_array;
+	char	**arr;
+	int		words;
 
 	if (!s)
 		return (NULL);
-	total_words = word_counter(s);
-	if (total_words == -1)
+	words = count_words(s, c);
+	arr = (char **)malloc((words + 1) * sizeof(char *));
+	if (!arr)
 		return (NULL);
-	word_array = malloc((total_words + 1) * sizeof(char *));
-	if (!word_array)
+	arr = split_words(s, arr, c);
+	if (!arr)
+	{
+		free(arr);
 		return (NULL);
-	word_array = word_splitter(s, word_array, 0);
-	word_array = remove_quotes(word_array);
-	return (word_array);
+	}
+	return (arr);
 }

@@ -6,7 +6,7 @@
 /*   By: saylital <saylital@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 10:07:53 by saylital          #+#    #+#             */
-/*   Updated: 2024/08/07 10:36:52 by saylital         ###   ########.fr       */
+/*   Updated: 2024/08/08 13:13:06 by saylital         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@ static void	pipex(char *argv[], char *envp[])
 	int	pid2;
 
 	if (pipe(fd) == -1)
-		exit(EXIT_FAILURE);
+		pipe_error();
 	pid1 = fork();
 	if (pid1 == -1)
-		exit(EXIT_FAILURE);
+		fork_error(fd);
 	if (pid1 == 0)
 	{
 		read_file(fd, argv);
@@ -46,7 +46,7 @@ static void	pipex(char *argv[], char *envp[])
 	}
 	pid2 = fork();
 	if (pid2 == -1)
-		exit(EXIT_FAILURE);
+		fork_error(fd);
 	if (pid2 == 0)
 	{
 		write_file(fd, argv);
