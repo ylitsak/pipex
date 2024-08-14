@@ -6,7 +6,7 @@
 /*   By: saylital <saylital@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 19:59:11 by saylital          #+#    #+#             */
-/*   Updated: 2024/08/13 11:00:31 by saylital         ###   ########.fr       */
+/*   Updated: 2024/08/14 10:15:39 by saylital         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	read_file(int *fd, char *argv[])
 	if (fd_open == -1)
 	{
 		close(fd[1]);
+		ft_putstr_fd("pipex: ", 2);
 		perror(argv[1]);
 		exit(0);
 	}
@@ -48,6 +49,7 @@ void	write_file(int *fd, char *argv[])
 	if (fd_write == -1)
 	{
 		close(fd[0]);
+		ft_putstr_fd("pipex: ", 2);
 		perror(argv[4]);
 		exit(1);
 	}
