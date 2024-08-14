@@ -6,7 +6,7 @@
 /*   By: saylital <saylital@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 10:07:53 by saylital          #+#    #+#             */
-/*   Updated: 2024/08/08 13:13:06 by saylital         ###   ########.fr       */
+/*   Updated: 2024/08/13 11:00:33 by saylital         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,16 @@ static void	check_status(void)
 	int	status1;
 	int	status2;
 
-	waitpid(-1, &status1, 0);
-	waitpid(-1, &status2, 0);
+	if (waitpid(-1, &status1, 0) == -1)
+	{
+		ft_putendl_fd("pipex: waitpid failed", 2);
+		exit(EXIT_FAILURE);
+	}
+	if (waitpid(-1, &status2, 0) == -1)
+	{
+		ft_putendl_fd("pipex: waitpid failed", 2);
+		exit(EXIT_FAILURE);
+	}
 	status1 = status1 >> 8;
 	status2 = status2 >> 8;
 	if (status1 != 0 && status1 > status2)

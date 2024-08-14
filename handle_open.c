@@ -6,7 +6,7 @@
 /*   By: saylital <saylital@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 19:59:11 by saylital          #+#    #+#             */
-/*   Updated: 2024/08/05 09:49:58 by saylital         ###   ########.fr       */
+/*   Updated: 2024/08/13 11:00:31 by saylital         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,11 @@
 static void	safe_dup2(int fd, int fd2)
 {
 	if (dup2(fd, fd2) == -1)
+	{
+		ft_putendl_fd("pipex: dup2 failed", 2);
+		close(fd);
 		exit(EXIT_FAILURE);
+	}
 	close(fd);
 }
 
